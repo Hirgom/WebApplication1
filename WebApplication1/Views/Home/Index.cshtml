@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Inicio";
+}
+
+<h1>Bienvenido</h1>
+
+<p>Accede rápidamente a las vistas:</p>
+
+<div class="btn-group" role="group" aria-label="Enlaces rápidos">
+    <a asp-controller="Products" asp-action="Index" class="btn btn-primary">Productos</a>
+    <a asp-controller="Categories" asp-action="Index" class="btn btn-secondary">Categorías</a>
+    <a asp-action="Privacy" class="btn btn-link">Privacidad</a>
+</div>
+
+<hr />
+
+<p>También puedes usar la barra de navegación si tu layout la incluye.</p>

@@ -1,0 +1,79 @@
+@page
+@model WebApplication1.Pages.IndexModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container mt-4">
+    <h1 class="display-4">Index</h1>
+
+    <p>
+        <a asp-controller="Categories" asp-action="Create" class="btn btn-primary me-2">Crear categoría</a>
+        <a asp-controller="Products" asp-action="Create" class="btn btn-success">Crear producto</a>
+    </p>
+
+    <h2 class="mt-4">Categorías</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Productos</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cat in Model.Categories)
+            {
+                <tr>
+                    <td>@cat.CategoryId</td>
+                    <td>@cat.Name</td>
+                    <td>
+                        @if (cat.Products?.Count > 0)
+                        {
+                            <ul class="mb-0">
+                                @foreach (var p in cat.Products)
+                                {
+                                    <li>@p.Name (@string.Format("{0:C}", p.Price))</li>
+                                }
+                            </ul>
+                        }
+                    </td>
+                    <td>
+                        <a asp-controller="Categories" asp-action="Edit" asp-route-id="@cat.CategoryId" class="btn btn-sm btn-primary me-1">Editar</a>
+                        <a asp-controller="Categories" asp-action="Delete" asp-route-id="@cat.CategoryId" class="btn btn-sm btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h2 class="mt-5">Productos</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Categoría</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model.Products)
+            {
+                <tr>
+                    <td>@p.ProductId</td>
+                    <td>@p.Name</td>
+                    <td>@string.Format("{0:C}", p.Price)</td>
+                    <td>@p.Category?.Name</td>
+                    <td>
+                        <a asp-controller="Products" asp-action="Edit" asp-route-id="@p.ProductId" class="btn btn-sm btn-primary me-1">Editar</a>
+                        <a asp-controller="Products" asp-action="Delete" asp-route-id="@p.ProductId" class="btn btn-sm btn-danger me-1">Eliminar</a>
+                        <a asp-controller="Products" asp-action="Details" asp-route-id="@p.ProductId" class="btn btn-sm btn-info">Detalles</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
