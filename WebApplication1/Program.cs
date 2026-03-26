@@ -6,9 +6,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Obtener la cadena de conexión de las variables de entorno
+var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+                        ?? builder.Configuration.GetConnectionString("DefaultConnection");
+
 // Register the EF Core DbContext so it can be injected into controllers
 builder.Services.AddDbContext<SampleDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 
