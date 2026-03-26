@@ -1,17 +1,60 @@
-﻿@{
-    ViewData["Title"] = "Inicio";
-}
+﻿<div class="text-center mt-5">
 
-<h1>Bienvenido</h1>
+    <h1 class="display-4 fw-bold text-primary">
+        Sistema de Inventario
+    </h1>
 
-<p>Accede rápidamente a las vistas:</p>
+    <p class="lead">
+        Administración de productos, categorías, proveedores y ventas.
+    </p>
 
-<div class="btn-group" role="group" aria-label="Enlaces rápidos">
-    <a asp-controller="Products" asp-action="Index" class="btn btn-primary">Productos</a>
-    <a asp-controller="Categories" asp-action="Index" class="btn btn-secondary">Categorías</a>
-    <a asp-action="Privacy" class="btn btn-link">Privacidad</a>
+    <hr />
+
+    <div class="row mt-4">
+
+        <div class="col-md-3">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <h4>Productos</h4>
+                    <p>Gestiona todos los productos del inventario</p>
+                    <a class="btn btn-primary"
+                       href="/Products">Ir</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <h4>Categorías</h4>
+                    <p>Organiza los productos</p>
+                    <a class="btn btn-success"
+                       href="/Categories">Ir</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <h4>Proveedores</h4>
+                    <p>Administración de proveedores</p>
+                    <a class="btn btn-warning"
+                       href="/Proveedores">Ir</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <h4>Ventas</h4>
+                    <p>Registro de ventas</p>
+                    <a class="btn btn-danger"
+                       href="/Ventas">Ir</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
-
-<hr />
-
-<p>También puedes usar la barra de navegación si tu layout la incluye.</p>

@@ -6,26 +6,30 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
+using WebApplication1.Models;
 
-namespace WebApplication1.Models
+namespace WebApplication1.Controllers
 {
-    public class ProductsController : Controller
+    public class VentasController : Controller
     {
         private readonly SampleDbContext _context;
 
-        public ProductsController(SampleDbContext context)
+        public VentasController(SampleDbContext context)
         {
             _context = context;
         }
 
-        // GET: Products
+        // GET: Ventas
         public async Task<IActionResult> Index()
         {
-            var sampleDbContext = _context.Products.Include(p => p.Category);
-            return View(await sampleDbContext.ToListAsync());
+            var ventas = _context.Ventas
+        .Include(v => v.Detalles)
+        .ThenInclude(d => d.Producto);
+
+            return View(await ventas.ToListAsync());
         }
 
-        // GET: Products/Details/5
+        // GET: Ventas/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,42 +37,39 @@ namespace WebApplication1.Models
                 return NotFound();
             }
 
-            var product = await _context.Products
-                .Include(p => p.Category)
-                .FirstOrDefaultAsync(m => m.ProductId == id);
-            if (product == null)
+            var venta = await _context.Ventas
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (venta == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            return View(venta);
         }
 
-        // GET: Products/Create
+        // GET: Ventas/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId");
             return View();
         }
 
-        // POST: Products/Create
+        // POST: Ventas/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,Name,Price,CategoryId")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,FechaVenta,ClienteNombre,ClienteDocumento,Total,Estado,MetodoPago")] Venta venta)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(product);
+                _context.Add(venta);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", product.CategoryId);
-            return View(product);
+            return View(venta);
         }
 
-        // GET: Products/Edit/5
+        // GET: Ventas/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -76,23 +77,22 @@ namespace WebApplication1.Models
                 return NotFound();
             }
 
-            var product = await _context.Products.FindAsync(id);
-            if (product == null)
+            var venta = await _context.Ventas.FindAsync(id);
+            if (venta == null)
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", product.CategoryId);
-            return View(product);
+            return View(venta);
         }
 
-        // POST: Products/Edit/5
+        // POST: Ventas/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Price,CategoryId")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FechaVenta,ClienteNombre,ClienteDocumento,Total,Estado,MetodoPago")] Venta venta)
         {
-            if (id != product.ProductId)
+            if (id != venta.Id)
             {
                 return NotFound();
             }
@@ -101,12 +101,12 @@ namespace WebApplication1.Models
             {
                 try
                 {
-                    _context.Update(product);
+                    _context.Update(venta);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.ProductId))
+                    if (!VentaExists(venta.Id))
                     {
                         return NotFound();
                     }
@@ -117,11 +117,10 @@ namespace WebApplication1.Models
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", product.CategoryId);
-            return View(product);
+            return View(venta);
         }
 
-        // GET: Products/Delete/5
+        // GET: Ventas/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -129,35 +128,34 @@ namespace WebApplication1.Models
                 return NotFound();
             }
 
-            var product = await _context.Products
-                .Include(p => p.Category)
-                .FirstOrDefaultAsync(m => m.ProductId == id);
-            if (product == null)
+            var venta = await _context.Ventas
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (venta == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            return View(venta);
         }
 
-        // POST: Products/Delete/5
+        // POST: Ventas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Products.FindAsync(id);
-            if (product != null)
+            var venta = await _context.Ventas.FindAsync(id);
+            if (venta != null)
             {
-                _context.Products.Remove(product);
+                _context.Ventas.Remove(venta);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductExists(int id)
+        private bool VentaExists(int id)
         {
-            return _context.Products.Any(e => e.ProductId == id);
+            return _context.Ventas.Any(e => e.Id == id);
         }
     }
 }
